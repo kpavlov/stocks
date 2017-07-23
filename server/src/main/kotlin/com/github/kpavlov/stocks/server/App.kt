@@ -8,7 +8,7 @@ fun main(args: Array<String>) {
 
     server.start()
 
-    println("com.github.kpavlov.stocks.server.Server online at http://$host:$port/\nPress RETURN to stop...")
+    println("Press RETURN to stop...")
     System.`in`.read() // let it run until user presses return
 
     server.stop()
