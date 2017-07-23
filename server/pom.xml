@@ -14,7 +14,7 @@
     <artifactId>stocks-server</artifactId>
 
     <properties>
-        <main.class>AppKt</main.class>
+        <main.class>com.github.kpavlov.stocks.server.AppKt</main.class>
     </properties>
 
     <dependencies>
@@ -34,8 +34,8 @@
             <version>${akka-http.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-modules-java8</artifactId>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
