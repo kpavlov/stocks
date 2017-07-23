@@ -9,25 +9,23 @@ import java.util.concurrent.CompletionStage
 
 class Server(val host: String = "localhost", val port: Int = 8080) {
 
-    val system = ActorSystem.create("routes")!!
+    val system = ActorSystem.create("http-server")!!
     val http = Http.get(system)!!
     val materializer = ActorMaterializer.create(system)!!
 
     lateinit var binding: CompletionStage<ServerBinding>
 
     fun start() {
-        println("Hello World!")
+        println("Starting HTTP Server...")
 
-        val routeFlow = Router.createRoute().flow(system, materializer)
+        val routeFlow = Router.createRoute()
+                .seal(system, materializer)
+                .flow(system, materializer)
 
         binding = http.bindAndHandle(routeFlow,
                 ConnectHttp.toHost(host, port), materializer)
 
-        println("com.github.kpavlov.stocks.server.Server online at http://$host:$port/\nPress RETURN to stop...")
-        System.`in`.read() // let it run until user presses return
-
-        // and shutdown when done
-        stop()
+        println("Server online at http://$host:$port")
     }
 
     fun stop() {
