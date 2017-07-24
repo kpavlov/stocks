@@ -15,33 +15,38 @@ object Router {
         val createStockUnmarshaller = unmarshaller(Json.objectMapper(), CreateStockRequest::class.java)
         val updateStockUnmarshaller = unmarshaller(Json.objectMapper(), UpdateStockRequest::class.java)
 
-        return route(
-                path(PathMatchers.segment("api").slash("stocks")) {
-                    route(
-                            get { complete("<h1>Say hello to akka-http GET</h1>") },
-                            post {
-                                route(
-                                        entity(createStockUnmarshaller) { body ->
-                                            complete(StatusCodes.CREATED, "<h1>Say hello to akka-http POST</h1><code>$body</code>")
-                                        }
-                                )
+        return extractLog { log ->
+            route(
+                    path(PathMatchers.segment("api").slash("stocks")) {
+                        route(
+                                get { complete("<h1>Say hello to akka-http GET</h1>") },
+                                post {
+                                    route(
+                                            entity(createStockUnmarshaller) { createStockRequest ->
+                                                log.info(createStockRequest.toString())
+                                                complete(StatusCodes.CREATED, "{}")
+                                            }
+                                    )
 
 
-                            }
-                    )
-                },
-                path(PathMatchers.segment("api").slash("stocks").slash(PathMatchers.integerSegment())) { id ->
-                    route(
-                            get { complete("<h1>Say hello to akka-http GET $id</h1>") },
-                            put {
-                                entity(updateStockUnmarshaller) { body ->
-                                    complete("<h1>Say hello to akka-http PUT $id</h1><code>$body</code>")
                                 }
-                            }
-                    )
-                },
-                pathSingleSlash { getFromResource("static/index.html") }
-        )
+                        )
+                    },
+                    path(PathMatchers.segment("api").slash("stocks").slash(PathMatchers.integerSegment())) { id ->
+                        route(
+                                get { complete("<h1>Say hello to akka-http GET $id</h1>") },
+                                put {
+                                    entity(updateStockUnmarshaller) { updateStockRequest ->
+                                        log.info(updateStockRequest.toString())
+                                        complete(StatusCodes.OK, "")
+                                    }
+                                }
+                        )
+                    },
+                    pathSingleSlash { getFromResource("static/index.html") }
+            )
+        }
+
     }
 
 }
